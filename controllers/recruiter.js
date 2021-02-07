@@ -1,16 +1,22 @@
-var db =require('../models');
-var passport=require('passport');
+import db from "../models";
+import passport from "passport";
 function isloggedin(){
+    // @ts-ignore
     if(req.authenticated())
+    // @ts-ignore
     return next();
+    // @ts-ignore
     res.redirect('/recruiter/login');
 }
 function isadmin (){
+    // @ts-ignore
     if(req.user.isadmin)
+    // @ts-ignore
     return next()
+    // @ts-ignore
     res.redirect('/admin/login')
 }
- module.exports=function (app){
+ function  router (app){
     app.get('/recruiter',(req,res)=>{
         res.redirect('/recruiter/login')
     });
@@ -33,17 +39,18 @@ app.get('recruiter/logout',isloggedin,(req,res,next)=>{
 })
 
     // create a new reacruiter account
-    app.post('/Recruiter',(req,res,next)=>{
+    app.post('/api/post/Recruiter',(req,res,next)=>{
+        // passed tests 
         db.Recruiter.create({
             company_name:req.body.company_name,
             company_email:req.body.company_email,
-            establishement_date:req.body.establishement_date,
-            bussiness_stream:req.body.bussiness_stream,
+            establishment_date:req.body.establishment_date,
+            Bussiness_stream:req.body. Bussiness_stream,
             company_url:req.body.company_url,
-            company_location:req.body.company_location,
+            company_location: req.body.company_location,
             password:req.body.password
         }).then((Recruiter)=>{
-            res.render('Recruiter',{Recruiter:Recruiter})
+            res.status(201).json(Recruiter);
         }).catch((err)=>{
             console.error(err.message);
             res.send(err);
@@ -51,22 +58,26 @@ app.get('recruiter/logout',isloggedin,(req,res,next)=>{
         })
     })
     // view all recruiter-admin
-    app.get('Recruiters',isadmin,(req,res)=>{
-        db.Recruiter.findAll({}).then(()=>{
-            res.render('Recruiters',{user:req.user})
+    app.get('/api/get/Recruiters',(req,res)=>{
+        // passed tests 
+        db.Recruiter.findAll({
+            attributes:["company_name","company_email","establishment_date","Bussiness_stream","company_url","company_location"]
+        }).then((recruiters)=>{
+            res.json(recruiters)
         }).catch((err)=>{
             console.log(err.message);
             res.send(err);
         });
     });
-    // view specific account
-    app.get('/Recruiter/profile/:id',isloggedin,(req,res,next)=>{
-        db.Recruiter.findOne({
+    // recruiter --profile 
+    app.get('/api/Recruiter/profile/:id',(req,res,next)=>{
+        // passed tests 
+        db.Recruiter.findAll({
             where:{
-                id:req.user.id
+                id:1
             }
         }).then((result)=>{
-            res.render('Recruiter-profile',{result,user:req.user})
+            res.json(result)
         }).catch((err)=>{
             console.log(err.message);
             next(err);
@@ -75,18 +86,21 @@ app.get('recruiter/logout',isloggedin,(req,res,next)=>{
     })
       
     // edit recruiter account
-    app.post('Recruiter/update/:id',isloggedin,(req,res,next)=>{
+    app.patch('/api/Recruiter/profile/update/:id',(req,res,next)=>{
+        // passed tests 
         db.Recruiter.update({
-            company_email:req.body.company_email,
-            company_location:req.body.company_location,
-            company_url:req.body.company_url,
-            company_name:req.body.company_name,
-            where:{
-                id:req.user.id
-            }
+            company_email:"kcb@gmail.com",
+            company_location:"kakamega",
+            company_url:"kcb.co.ke",
+            company_name:"kcb",
+        
 
+        },{
+            where:{
+                id:2
+            }
         }).then((result)=>{
-            res.redirect('/Recruiter')
+            res.json(result)
         }).catch((err)=>{
             console.error(err.message);
             res.send(err);
@@ -95,13 +109,14 @@ app.get('recruiter/logout',isloggedin,(req,res,next)=>{
     }) 
 
     // delete account of recruiter 
-    app.delete('/Recruiter/delete/:id',isloggedin,(req,res,next)=>{
+    app.delete('/api/delete/recruiter/:id',(req,res,next)=>{
+        // passed tets 
         db.Recruiter.destroy({
       where:{
-          id:req.user.id
+          id:2
       }      
         }).then((result)=>{
-            res.redirect('/');
+            res.json(result);
 
         }).catch((err)=>{
             console.log(err.message);
@@ -110,21 +125,36 @@ app.get('recruiter/logout',isloggedin,(req,res,next)=>{
         })
     });
     // return recruiter posted jobs with applicants 
-    app.get('/recruiter/applications',isloggedin,(req,res,next)=>{
-        db.Applications.findAll({
-            attributes:['job_name','applicant_email'],
+    app.get("/api/Recruiter/applicants/:id",(req,res,next)=>{
+        // passed 
+        db.Application.findAll({
+            include:[db.Recruiter],
             where:{
-                recruiterId:req.user.id
-            }
-        }).then((result)=>{
-            res.render('applications',{Applications:result})
+                RecruiterId:1
+            },
+            
+        }).then((data)=>{
+            res.json(data)
+
         }).catch((err)=>{
-            console.err(err);
-            res.send(err);
-            next(err);
+            next(err)
         })
     })
     
+    
+    
+    app.get("/api/Recruiter/applicants",(req,res,next)=>{
+        // passed 
+        db.Application.findAll({
+            include:[db.Recruiter],
+    
+        }).then((data)=>{
+            res.json(data)
+
+        }).catch((err)=>{
+            next(err)
+        })
+    })
 
 }
-
+module.exports=router;  

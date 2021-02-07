@@ -1,12 +1,12 @@
-var db =require('../models');
-var passport=require('passport');
-function isadmin(){
+import db from "../models";
+import passport from "passport";
+function isadmin(req,res,next){
     if(req.user.isadmin)
       return next();
     
     res.redirect('/admin/login')
 }
-module.exports=function (app){
+function router (app){
     app.get('/admin',(req,res)=>{
         res.redirect('/admin/login')
     });
@@ -26,26 +26,41 @@ module.exports=function (app){
         })
     })
 
+    
+app.get ("/all/admins",(req,res,next)=>{
+        db.User.findAll({
+            attributes:["email","f_name","l_name"]
+        }).then((admins)=>{
+res.json(admins)
+        }).catch((err)=>{
+            next(err)
+        })
+    })
+
 // create a new admin
-app.post('/Admin',(req,res)=>{
+app.post("/Admin/create",(req,res,next)=>{
+    // passed tests 
     db.User.create({
         email:req.body.email,
-        password:req.boddy.password
-    }).then(()=>{
-        res.redirect('/Admin')
+        f_name:req.body.f_name,
+        l_name:req.body.l_name,
+        password:req.body.password
+    }).then((user)=>{
+        res.status(201).json(user)
     }).catch((err)=>{
-        console.log(err);
-        res.send(err)
+        next(err)
     })
-});
+})
 // admin view his profile  
-app.get('Admin',isadmin,(req,res)=>{
-    db.User.findOne({
+app.get('/Admin/profile',(req,res)=>{
+    // passed tests 
+    db.User.findAll({
+        attributes:["email","f_name","l_name"],
         where:{
-            id:req.user.id
+            id:2
         }
     }).then((admininfo)=>{
-        res.render('admin-profile',{admininfo,user:req.user})
+        res.status(206).json(admininfo)
     }).catch((err)=>{
         console.log(err.message);
         res.send(err)
@@ -53,15 +68,20 @@ app.get('Admin',isadmin,(req,res)=>{
 })
 
 // admin edit account
-app.put('/Admin/account/:id',isadmin,(req,res)=>{
+app.patch('/Admin/account/:id',(req,res)=>{
+    // passed tests 
     db.User.update({
-        email:req.body.email,
-        password:req.body.password,
+        email:"rere@gmail.com",
+        f_name:"rere",
+        l_name:"mark",
+        
+    },  
+    {
         where:{
-            id:req.user.id
+            id:1
         }
     }).then((result)=>{
-        res.redirect('/Admin')
+        res.status(205).json(result)
     }).catch((err)=>{
         console.log(err);
         res.send(err)
@@ -69,18 +89,8 @@ app.put('/Admin/account/:id',isadmin,(req,res)=>{
 });
  // delete account
 
- app.delete('/Admin/delete/:id',isadmin,(req,res)=>{
-     db.User.destroy({
-         where:{
-             id:req.user.id
-         }
-     }).then((result)=>{
-         res.redirect('/');
-     }).catch((err)=>{
-         console.log(err.message);
-         res.send(err);
-     })
- })
  
-
+ 
+ 
 }
+module.exports=router;

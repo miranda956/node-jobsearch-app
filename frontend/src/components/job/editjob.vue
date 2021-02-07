@@ -1,0 +1,161 @@
+<template>
+
+<div class="container contact-form">
+            <div class="contact-image">
+                <img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>
+            </div>
+            <form method="post">
+                <h3>  UPDATE  JOB </h3>
+               <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="txtName" class="form-control" placeholder="jobtype" value="" />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="txtName" class="form-control" placeholder="joblocation*" value="" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="text" name="txtskills" class="form-control" placeholder="Coding,Design,Deployment *" value="" />
+
+                        </div>
+                            <div class="form-group">
+                            <label class="control-label col-sm-offset-2 col-sm-2" for="company">experience_level</label>
+                            <div class="col-sm-6 col-md-4">
+                             <select id="company" class="form-control">
+                             <option>0-1 years</option>
+                             <option>1-4 years</option>
+                             <option>4-9 years</option>
+                             <option>10+ years</option>
+        </select> 
+      </div>
+    </div>
+                        <div class="form-group">
+                            <input type="submit" name="btnSubmit" class="btnContact" value="Submit" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <textarea name="txtMsg" class="form-control" placeholder="jobdescription *" style="width: 100%; height: 150px;"></textarea>
+                        </div>
+                    </div>
+                    
+                    
+                </div>  
+            </form>
+</div>
+</template>
+<script>
+
+
+import jobDataService from "../../Services/jobDataService";
+export default {
+  name: 'job-edit',
+    data () {
+    return {
+      currentjob: {},
+      message:''
+      
+    }
+  },
+  methods: {
+    getjob(id) {
+      jobDataService.get(id)
+        .then(response => {
+          this.currentjob = response.data;
+          console.log(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+
+    updatejobinfo() {
+      var data = {
+        id: this.currentapplicant.id,
+        job_type: this.currentjob.first_name,
+        created_date: this.currentjob.last_name,
+        expires_on: this.currentjob.email,
+        job_description:this.currentjob.job_description,
+        job_location:this.currentjob.job_location
+      };
+
+      jobDataService.update(this.currentjob.id, data)
+        .then(response => {
+          
+          console.log(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+
+    updateapplicant() {
+      jobDataService.update(this.currentjob.id, this.currentjob)
+        .then(response => {
+          console.log(response.data);
+          this.message = ' updated successfully!';
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+  }
+  
+}
+</script>
+<style scoped>
+body{
+    background: -webkit-linear-gradient(left, #0072ff, #00c6ff);
+}
+.contact-form{
+    background: #fff;
+    margin-top: 10%;
+    margin-bottom: 5%;
+    width: 70%;
+}
+.contact-form .form-control{
+    border-radius:1rem;
+}
+.contact-image{
+    text-align: center;
+}
+.contact-image img{
+    border-radius: 6rem;
+    width: 11%;
+    margin-top: -3%;
+    transform: rotate(29deg);
+}
+.contact-form form{
+    padding: 14%;
+}
+.contact-form form .row{
+    margin-bottom: -7%;
+}
+.contact-form h3{
+    margin-bottom: 8%;
+    margin-top: -10%;
+    text-align: center;
+    color: #0062cc;
+}
+.contact-form .btnContact {
+    width: 50%;
+    border: none;
+    border-radius: 1rem;
+    padding: 1.5%;
+    background: #dc3545;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+}
+.btnContactSubmit
+{
+    width: 50%;
+    border-radius: 1rem;
+    padding: 1.5%;
+    color: #fff;
+    background-color: #0062cc;
+    border: none;
+    cursor: pointer;
+}
+</style>>

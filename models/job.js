@@ -2,58 +2,70 @@ module.exports=(sequelize,DataTypes)=>{
     const Jobs=sequelize.define("Jobs",{
         job_type:{
             type:DataTypes.STRING,
-            allownull:false
+            allowNull:false
 
         },
          created_date:{
                 type:DataTypes.DATE,
-                allownull:false
+                allowNull:false
 
+            },
+            expires_on:{
+                type:DataTypes.DATE,
+                allowNull:false
+                
             },
             is_active:{
                 type:DataTypes.BOOLEAN,
+                default:true
 
             },
 
             job_description:{
                 type:DataTypes.TEXT,
-                allownull:false
+                allowNull:false
 
             }, 
             job_location:{
                 type:DataTypes.STRING,
-                allownull:false,
+                allowNull:false,
 
             },
             skills:{
                 type:DataTypes.STRING,
-                allownull:false,
+                allowNull:false,
 
             },
             experience_level:{
                 type:DataTypes.STRING,
-                allownull:false
+                allowNull:false
             },
 
         
     },
     {
-        freezeTableName:true
+        freezeTableName:true,
+        timestamps:false
     }
     
     );
     Jobs.associate=function(models){
         Jobs.belongsTo(models.Recruiter,{
             foreignkey:{
-                allownull:false
+                allowNull:false
             }
         });
         Jobs.hasMany(models.Application,{
             foreignkey:{
-                allownull:false
+                allowNull:false
             }
         })
-    }
+        Jobs.hasMany(models.Applicant,{
+            foreignkey:{
+                allowNull:false
+            }
+        })
+    }  
     return Jobs;
 
 }

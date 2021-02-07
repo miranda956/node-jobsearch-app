@@ -7,17 +7,15 @@ const session=require('express-session');
 const path =require('path');
 const exphbs=require('express-handlebars');
 const PORT=process.env.PORT||5000;
+import cors from "cors";
 const passport =require('./config/passport');
 
 const db=require('./models');
-require('./controllers/admin'); 
-require('./controllers/applicant');
-require('./controllers/Applications');
-require('./controllers/jobs');
-require('./controllers/recruiter');
+
 
 // intializing an instance of express
 const app= express();
+app.use(cors());
 app.use(cookieparser());
 app.use(methodoverride("_method"));
 app.use(logger("dev"));
@@ -34,6 +32,11 @@ app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
  
 app.use(express.static(path.join(__dirname,'views')));
+require("./controllers/admin")(app); 
+require("./controllers/applicant")(app,{});
+require("./controllers/Applications")(app,{});
+require("./controllers/jobs")(app,{});
+require("./controllers/recruiter")(app,{});
 
 db.sequelize.sync({force:false}).then(()=>{
     app.listen(PORT,function(err){
@@ -44,7 +47,7 @@ db.sequelize.sync({force:false}).then(()=>{
         }
     }
     ) 
-
+  
 });
 
 

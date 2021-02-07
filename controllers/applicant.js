@@ -1,16 +1,16 @@
-var db =require('../models');
-var passport =require('passport');
-function isloggedin(){
+import db from "../models";
+import passport from "passport";
+function isloggedin(req,res,next){
     if(req.authenticated())
     return next();
     res.redirect('/applicant/login');
 }
-function isadmin(){
+function isadmin(req,res,next){
     if(req.user.isadmin)
     return next();
     res.redirect('/admin/login');
 }
- module.exports=function (app){
+ function  router (app){
     app.get('/applicant',(req,res)=>{
         res.redirect('/applicant/login')
     })
@@ -32,11 +32,14 @@ function isadmin(){
     })
 
     // get all aplicants -admin
-    app.get("/Applicants",isadmin,(req,res,next)=>{
-        db.Applicant.findAll({}).then((result)=>{
-            res.render('Applicant',{Applicant:result});
+    app.get("/api/get/Applicants",(req,res,next)=>{
+        // passed tests 
+        db.Applicant.findAll({
+            attributes:[ "id","email","first_name","last_name","contact"]
+        }).then((result)=>{
+            res.json(result)
         }).catch(function(err){
-            console.err(err.message);
+            console.error(err.message);
             res.send(err);
             next(err);
 
@@ -44,51 +47,55 @@ function isadmin(){
     });
     // get applicant by id and 
 
-    app.get('Applicant/:id/',isloggedin,(req,res,next)=>{
-        db.Applicant.findOne({
+    app.get('/api/Applicant/profile/:id',(req,res,next)=>{
+        // passed tests 
+        db.Applicant.findAll({
+            attributes:["email","first_name","last_name","contact"],
             where:{
-                id:req.params.id
+                id:1
             }
         }).then((userprofile)=>{
-            res.render('userupdate',{userupdate:userprofile})
+            res.json(userprofile)
         }).catch((err)=>{
-            console.err(err.message);
+            console.error(err.message);
             res.send(err);
             next(err);
         });
     });
-
+  
 
     // create a new applicant\
 
-    app.post('/Applicant',(req,res)=>{
+    app.post('/api/create/Applicant',(req,res)=>{
         db.Applicant.create({
+            // passed tets
             first_name:req.body.first_name,
             last_name:req.body.last_name,
             email:req.body.email,
             contact:req.body.contact,
             password:req.body.password
-        }).then(()=>{
-            res.redirect('/Jobs')
+        }).then((applicant)=>{
+            res.json(applicant)
         }).catch((err)=>{
             console.log(err.message);
             res.send(err)
         });
     });
     // edit applicant info
-    app.put('/Applicant/:id',isloggedin,(req,res,next)=>{
+    app.patch('/api/patch/applicant/profile/:id',(req,res,next)=>{
+        // passed tests 
         db.Applicant.update({
-            first_name:req.body.first_name,
-            last_name:req.body.last_name,
-            email:req.body.email,
-            contact:req.body.contact
+            first_name:"mark",
+            last_name:"switger",
+            email:"switiger@gmail.com",
+            contact:"9789900"
 
         },{
             where:{
-                id:req.user.id
+                id:4
             }
         }).then((result)=>{
-            res.redirect('/Applicant');
+            res.json(result)
         }).catch((err)=>{
             console.log(err.message);
             res.send(err);
@@ -96,37 +103,23 @@ function isadmin(){
         });
     });
 
-    // delete user account
-   app.delete('/applicant/delete/:id',isloggedin,(req,res,next)=>{
-       db.Applicant.destroy({
-           where:{
-               id:req.user.id
-           }
 
-       }).then((result)=>{
-           res.redirect('/');
-       }).catch((err)=>{
-           console.err(err.message);
-           res.send(err);
-           next(err);
-       });
-   });
-   // view applied jobs
-   app.get('/applicant/job/:id',isloggedin,(req,res,next)=>{
-       db.Applications.findAll({
-           attributes:['job_name','recruiter_email'],
+   //view jobs applied by applicant 
+   app.get("/api/applicant/id/appliedjobs",(req,res,next)=>{
+       // passed 
+       db.Application.findAll({
+           include:[db.Jobs],
            where:{
-               applicantID:req.user.id
-           }
-       }).then((result)=>{
-           res.render('application',{application:result})
+               ApplicantId:2
+           },
+
+       }).then((applications)=>{
+           res.json(applications)
        }).catch((err)=>{
-           console.err(err);
-           res.send(err);
-           next(err);
+           next(err)
        })
    })
 
-
 }
+module.exports=router
 

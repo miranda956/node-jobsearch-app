@@ -1,25 +1,30 @@
-var db=require('../models');
-function isloggedin(){
+import db from "../models";
+function isloggedin(req,res,next){
     if(req.authenticated())
     return next();
     res.redirect('/applicant/login')
 }
-function isadmin(){
+function isadmin(req,res,next){
     if(req.user.isadmin)
     return next();
     res.redirect('/admin/login');
 
 }
-function isrecruiter(){
+function isrecruiter(req,res,next){
     if(req.authenticated())
     return next();
     res.redirect('/recruiter/login')
 }
-module.exports=function (app){
-    // get all jobs-- admin
-    app.get('/Jobs',isadmin,(req,res,next)=>{
-        db.Jobs.findAll({}).then((result)=>{
-            res.render('Jobs',{jobs:result})
+function  router (app){
+
+    app.get('/jobs',(req,res,next)=>{
+        // passed test 
+        db.Jobs.findAll({
+            where:{
+                is_active:true    
+            }
+        }).then((jobs)=>{
+            res.json(jobs)
         }).catch((err)=>{
             console.log(err.message);
             next(err);
@@ -28,70 +33,71 @@ module.exports=function (app){
         });
     });
     // getting jobs to home page 
-    app.get('/jobs',(req,res,next)=>{
-        Jobs.findAll({
-            include:[{
-                model:Recruiter,
-                required:true
-            }]
+    app.get('/api/jobs/details',(req,res,next)=>{
+        // passsed tests 
+        db.Jobs.findAll({
+            include:[db.Recruiter]
         }).then((jobs)=>{
-            res.render('jobs',{jobs:jobs})
+            res.json(jobs)
         }).catch((err)=>{
             console.error(err);
             next(err);
         })
     })
     
-
-    app.post('/Jobs/post',isrecruiter,(req,res,next)=>{
+    
+    
+    app.post("/api/job/create",(req,res,next)=>{
         db.Jobs.create({
             job_type:req.body.job_type,
-            created_date:req.body.created_date,
+            created_date:Date,
             job_description:req.body.job_description,
             job_location:req.body.job_location,
             skills:req.body.skills,
             experience_level:req.body.experience_level,
             RecruiterId:req.user.id
-        }).then((data)=>{
-            db.Recruiter.findAll({
-                attributes:['company_email'],
-                where:{
-                    id:req.user.id
-                }
-            }).then((data1)=>{
-                db.Applications.update({
-                    jobId:data.dataValues.id,
-                    job_name:data.dataValues.job_type,
-                   recruiter_email:data1.dataValues.company_email 
-                })
-            }).catch((err)=>{
-                console.error(err);
-                next(err);
-            })
-            res.redirect('/Jobs')
+        }).then((newJob)=>{
+            res.json(newJob)
         }).catch((err)=>{
-            console.err(err.message);
-            res.send(err);
-            next(err);
+            console.error(err)
         })
-    });
+    })
 
+
+    app.post('/api/post/job',(req,res,next)=>{
+        db.Jobs.create({
+            job_type:"accountant",
+            created_date:"2020-09-09",
+            expires_on:"2020-09-09",
+            job_description:"accounts manager",
+            job_location:"khwisero",
+            skills:"bachelor degree,accountant",
+            experience_level:"3 years",
+            
+        }).then((data)=>{
+            res.json(data)
+
+        }).catch((err)=>{
+            next(err)
+        })
+    })
     // update job  - recruiter
-    app.put('/job/update/:id',isrecruiter,(req,res,next)=>{
+    app.patch('/job/update/:id',(req,res,next)=>{
+        // passed tests 
         db.Jobs.update({
-            job_type:req.body.job_type,
-            end_date:req.body.end_date,
-            job_description:req.body.job_description,
-            skills:req.body.skills,
-            experience_level:req.body.experience_level
+            job_type:"enginering",
+            end_date:"2020-09-12",
+            job_description:"senior software enginerr",
+            skills:"SQL,NET core,Js,design patterns",
+            experience_level:"5+ years "
         },{
             where:{
-                id:req.params.id
+                id:2
             }
         }).then((result)=>{
-            res.redirect('/jobs');
+            res.json(result)
         }).catch((err)=>{
-            console.err(err.message);
+            console.log(err.message);
             res.send(err);
             next(err);
         });
@@ -99,15 +105,16 @@ module.exports=function (app){
     
 
 // delete existing job -admin
-    app.delete('/jobs/:id',isadmin,(req,res,next)=>{
+    app.delete('/job/delete/:id',(req,res,next)=>{
+        // passed tests 
         db.Jobs.destroy({
             where:{
-                id:req.params.id
+                id:1
             }
         }).then((result)=>{
-            res.redirect('/jobs');
+            res.json(result)
         }).catch((err)=>{
-            console.err(err.message);
+            console.error(err.message);
             res.send(err);
             next(err);
         })
@@ -116,7 +123,8 @@ module.exports=function (app){
     // delete a job posted by recruiter
 
     // --search for specific job
-    app.get('/job/search/keyword',isloggedin,(req,res,next)=>{
+    app.get('/api/tutorials?search=[keyword]',(req,res,next)=>{
+        // ok 
         db.Jobs.findAll({
             where:{
                 $or:{
@@ -148,13 +156,14 @@ module.exports=function (app){
         })
     })
     //-- return a specific job 
-    app.get('/job/:id',isloggedin,(req,res,next)=>{
-        db.Jobs.findOne({
+    app.get('/job/:id',(req,res,next)=>{
+        // passed test 
+        db.Jobs.findAll({
             where:{
-                id:req.params.id
+                id:2
             }
         }).then((result)=>{
-            res.render('job',{job:result})
+            res.json(result)
 
         }).catch((err)=>{
             console.error(err);
@@ -164,3 +173,4 @@ module.exports=function (app){
 
 
 }
+module.exports=router;

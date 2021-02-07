@@ -2,7 +2,7 @@ module.exports=(sequelize,DataTypes)=>{
     const Experience=sequelize.define('Experience',{
         current_job:{
             type:DataTypes.STRING,
-            allownull:false
+            allowNull:false
         },
         job_title:{
             type:DataTypes.STRING,
@@ -11,34 +11,34 @@ module.exports=(sequelize,DataTypes)=>{
         },
         start_date:{
             type:DataTypes.DATE,
-            allownull:false
+            allowNull:false
 
         },
         company_name:{
             type:DataTypes.STRING,
-            allownull:false,
+            allowNull:false,
 
         },
-        years_work:{
+        years_ofwork:{
             type:DataTypes.INTEGER,
-            allownull:false,
+            allowNull:false,
             validate:{
                 isNumeric:true
             },
-            current_salary:{
-                type:DataTypes.DECIMAL,
-                allownull:false,
-                validate:{
-                    isNumeric:true
-                }
-            }
         },
+     current_salary:{
+         type:DataTypes.DECIMAL,
+                allowNull:false,
+                
+            }, 
+        
         
         
         
     },
     {
-        freezeTableName:true
+        freezeTableName:true,
+        timestamps:false
 
     }
     );

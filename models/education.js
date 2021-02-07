@@ -1,50 +1,38 @@
 module.exports=(sequelize,DataTypes)=>{
     const Education=sequelize.define("Education",{
-        email:{
-            type:DataTypes.STRING,
-            allownull:false,
-            valiadation:{
-                isEmail:true
-            }
-        },
+        
             certificate_name:{
                 type:DataTypes.STRING,
-                allownull:false
+                allowNull:false
             },
             major:{
                 type:DataTypes.STRING,
-                allownull:false
+                allowNull:false
             },
             insitution_attended:{
                 type:DataTypes.STRING,
-                allownull:false
+                allowNull:false
             },
             start_date:{
                 type:DataTypes.DATE,
-                allownull:false
+                allowNull:false
             
             },
             completion_date:{
                 type:DataTypes.DATE,
-                allownull:false
+                allowNull:false
             },
-            cpga:{
-                type:DataTypes.INTEGER,
-                allownull:false,
-                validate:{
-                    isNumeric:true
-                }
-
-            },
+            
      },
      {
-         freezeTableName:true
+         freezeTableName:true,
+         timestamps:false
      }
      );
     Education.associate=function(models){
         Education.belongsTo(models.Applicant,{
             foreignkey:{
-                allownull:false
+                allowNull:false
             }
         })
 

@@ -1,70 +1,66 @@
+// @ts-ignore
 var bcrypt=require=('bcrypt');
 
 module.exports=(sequelize,DataTypes)=>{
     const Applicant=sequelize.define("Applicant",{
         email:{
             type:DataTypes.STRING,
-            allownull:false,
+            allowNull:false,
             validate:{
                 isEmail:true
             }
         },
         first_name:{
             type:DataTypes.STRING,
-            allownull:false,
-            validate:[5,15]
+            allowNull:false,
+            
 
         },
         last_name:{
             type:DataTypes.STRING,
-            allownull:false,
-            validate:[5,15]
+            allowNull:false,
+            
         },
         contact:{
             type:DataTypes.INTEGER,
-            allownull:false,
+            allowNull:false,
             validate:{
                 isNumeric:true
             }
         },
         password:{
             type:DataTypes.STRING,
-            allownull:false,
+            allowNull:false,
             validate:{
                 len:[8,15]
             }
         },
     },
+
     {
-
-    instanceMethods: {
-        validPassword: function(password) {
-            return bcrypt.compareSync(password, this.password);
+        timestamps:false,
+        freezeTableName:true,
+        instanceMethods: {
+            generateHash(password) {
+                // @ts-ignore
+                return bcrypt.hash(password, bcrypt.genSaltSync(8));
+            },
+            validPassword(password) {
+                // @ts-ignore
+                return bcrypt.compare(password, this.password);
+            }
         }
-    },
-    hooks: {
-        beforeCreate: function(Applicant, options, cb) {
-            Applicant.password = bcrypt.hashSync(
-                Applicant.password,
-                bcrypt.genSaltSync(10),
-                null
-            );
-            cb(null, options);
-        }
-    },
-   
-},
-{
-    freezeTableName:true
+    
+    
 
-}
-);
+});
     Applicant.associate=function(models){
         Applicant.hasMany(models.Application,{
             foreignkey:{
-                allownull:false
+                allowNull:false
             }
-        });
+        });  
+        
     }
     return Applicant;
 }
