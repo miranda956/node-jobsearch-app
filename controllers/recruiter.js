@@ -74,7 +74,7 @@ app.get('recruiter/logout',isloggedin,(req,res,next)=>{
         // passed tests 
         db.Recruiter.findAll({
             where:{
-                id:1
+                id:req.user.id
             }
         }).then((result)=>{
             res.json(result)
@@ -89,15 +89,15 @@ app.get('recruiter/logout',isloggedin,(req,res,next)=>{
     app.patch('/api/Recruiter/profile/update/:id',(req,res,next)=>{
         // passed tests 
         db.Recruiter.update({
-            company_email:"kcb@gmail.com",
-            company_location:"kakamega",
-            company_url:"kcb.co.ke",
-            company_name:"kcb",
+            company_email:req.body.company_email,
+            company_location:req.body.company_location,
+            company_url:req.body.company_url,
+            company_name:req.body.company_name
         
 
         },{
             where:{
-                id:2
+                id:req.param.id
             }
         }).then((result)=>{
             res.json(result)
@@ -113,7 +113,7 @@ app.get('recruiter/logout',isloggedin,(req,res,next)=>{
         // passed tets 
         db.Recruiter.destroy({
       where:{
-          id:2
+          id:req.user.id
       }      
         }).then((result)=>{
             res.json(result);
@@ -130,7 +130,7 @@ app.get('recruiter/logout',isloggedin,(req,res,next)=>{
         db.Application.findAll({
             include:[db.Recruiter],
             where:{
-                RecruiterId:1
+                RecruiterId:req.user.id
             },
             
         }).then((data)=>{

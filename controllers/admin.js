@@ -57,7 +57,7 @@ app.get('/Admin/profile',(req,res)=>{
     db.User.findAll({
         attributes:["email","f_name","l_name"],
         where:{
-            id:2
+            id:req.user.id
         }
     }).then((admininfo)=>{
         res.status(206).json(admininfo)
@@ -71,14 +71,14 @@ app.get('/Admin/profile',(req,res)=>{
 app.patch('/Admin/account/:id',(req,res)=>{
     // passed tests 
     db.User.update({
-        email:"rere@gmail.com",
-        f_name:"rere",
-        l_name:"mark",
+        email:req.body.email,
+        f_name:req.body.f_name,
+        l_name:req.body.l_name
         
     },  
     {
         where:{
-            id:1
+            id:req.user.id
         }
     }).then((result)=>{
         res.status(205).json(result)

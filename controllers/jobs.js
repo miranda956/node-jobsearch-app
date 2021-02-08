@@ -1,3 +1,4 @@
+import bodyParser from "body-parser";
 import db from "../models";
 function isloggedin(req,res,next){
     if(req.authenticated())
@@ -66,13 +67,13 @@ function  router (app){
 
     app.post('/api/post/job',(req,res,next)=>{
         db.Jobs.create({
-            job_type:"accountant",
-            created_date:"2020-09-09",
-            expires_on:"2020-09-09",
-            job_description:"accounts manager",
-            job_location:"khwisero",
-            skills:"bachelor degree,accountant",
-            experience_level:"3 years",
+            job_type:req.body.job_type,
+            created_date:req.body.created_date,
+            expires_on:req.body.expires_on,
+            job_description:req.body.job_description,
+            job_location:req.body.job_location,
+            skills:req.body.skills,
+            experience_level:req.body.experience_level
             
         }).then((data)=>{
             res.json(data)
@@ -85,14 +86,14 @@ function  router (app){
     app.patch('/job/update/:id',(req,res,next)=>{
         // passed tests 
         db.Jobs.update({
-            job_type:"enginering",
-            end_date:"2020-09-12",
-            job_description:"senior software enginerr",
-            skills:"SQL,NET core,Js,design patterns",
-            experience_level:"5+ years "
+            job_type:req.body.job_type,
+            end_date:req.body.end_date,
+            job_description:req.body.job_description,
+            skills:req.body.skills,
+            experience_level:req.body.experience_level
         },{
             where:{
-                id:2
+                id:req.param.id
             }
         }).then((result)=>{
             res.json(result)
@@ -109,7 +110,7 @@ function  router (app){
         // passed tests 
         db.Jobs.destroy({
             where:{
-                id:1
+                id:req.param.id
             }
         }).then((result)=>{
             res.json(result)
@@ -160,7 +161,7 @@ function  router (app){
         // passed test 
         db.Jobs.findAll({
             where:{
-                id:2
+                id:req.param.id
             }
         }).then((result)=>{
             res.json(result)

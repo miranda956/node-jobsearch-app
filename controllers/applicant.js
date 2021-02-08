@@ -52,7 +52,7 @@ function isadmin(req,res,next){
         db.Applicant.findAll({
             attributes:["email","first_name","last_name","contact"],
             where:{
-                id:1
+                id:req.user.id
             }
         }).then((userprofile)=>{
             res.json(userprofile)
@@ -85,14 +85,14 @@ function isadmin(req,res,next){
     app.patch('/api/patch/applicant/profile/:id',(req,res,next)=>{
         // passed tests 
         db.Applicant.update({
-            first_name:"mark",
-            last_name:"switger",
-            email:"switiger@gmail.com",
-            contact:"9789900"
+            first_name:req.body.first_name,
+            last_name:req.body.last_name,
+            email:req.body.email,
+            contact:req.body.contact
 
         },{
             where:{
-                id:4
+                id:req.user.id
             }
         }).then((result)=>{
             res.json(result)
@@ -110,7 +110,7 @@ function isadmin(req,res,next){
        db.Application.findAll({
            include:[db.Jobs],
            where:{
-               ApplicantId:2
+               ApplicantId:req.user.id
            },
 
        }).then((applications)=>{
