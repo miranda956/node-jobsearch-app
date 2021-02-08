@@ -47,24 +47,6 @@ function  router (app){
     })
     
     
-    
-    app.post("/api/job/create",(req,res,next)=>{
-        db.Jobs.create({
-            job_type:req.body.job_type,
-            created_date:Date,
-            job_description:req.body.job_description,
-            job_location:req.body.job_location,
-            skills:req.body.skills,
-            experience_level:req.body.experience_level,
-            RecruiterId:req.user.id
-        }).then((newJob)=>{
-            res.json(newJob)
-        }).catch((err)=>{
-            console.error(err)
-        })
-    })
-
-
     app.post('/api/post/job',(req,res,next)=>{
         db.Jobs.create({
             job_type:req.body.job_type,
