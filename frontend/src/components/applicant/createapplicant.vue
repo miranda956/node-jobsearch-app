@@ -1,24 +1,24 @@
 <template>
 	
 	<div class="signup-form">
-    <form >
+    <form   @submit="checkForm" >
 		<h2>KAZI HUSTLE</h2>
 		<p class="hint-text">Create your account. It's free and only takes a minute.</p>
         <div class="form-group">
-			<input type="text" class="form-control" name="first_name" placeholder="First Name" v-model="applicant.first_name" />	
+			<input type="text" class="form-control" name="first_name" placeholder="First Name" v-model="applicant.first_name" required  />	
         </div>
 		<div class="form-group">
-		<input type="text" class="form-control" name="last_name" placeholder="Last Name" v-model="applicant.last_name"/>
+		<input type="text" class="form-control" name="last_name" placeholder="Last Name" v-model="applicant.last_name"  required />
 		</div>
 
         <div class="form-group">
-        	<input type="email" class="form-control" name="email" placeholder="Email" v-model="applicant.email"/>
+        	<input type="email" class="form-control" name="email" placeholder="Email" v-model="applicant.email" required />
         </div>
 		<div class="form-group">
-            <input type="text" class="form-control" name="contact" placeholder="contact"  v-model="applicant.contact"/>
+            <input type="text" class="form-control" name="contact" placeholder="contact"  v-model="applicant.contact" required/>
         </div>
 		<div class="form-group">
-            <input type="password" class="form-control" name="password" placeholder="password" v-model="applicant.password"/>
+            <input type="password" class="form-control" name="password" placeholder="password" v-model="applicant.password" required  />
         </div>        
         <div class="form-group">
 			<label class="form-check-label"><input type="checkbox"> I accept the <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a></label>
@@ -42,12 +42,40 @@ export default {
         last_name: '',
         email: '',
         contact: '',
-        password:''
+        password:'',
+		message:''
       }
     }
   },
   
    methods: {
+
+
+	   checkForm:function(e) {
+      this.errors = [];
+      if(!this.first_name) this.errors.push("firstName required.");
+	  if(!this.last_name) this.errors.push("lastName required.");
+	  if(!this.contact) this.errors.push("contact is  required.");
+	  if(!this.password ) this.errors.push("password  is required.");
+
+
+
+
+
+      if(!this.email) {
+        this.errors.push("Email required.");
+      } else if(!this.validEmail(this.email)) {
+        this.errors.push("Valid email required.");        
+      }
+      if(!this.errors.length) return true;
+      e.preventDefault();
+    },
+    validEmail:function(email) {
+      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+    }
+   },
+
     saveApplicant() {
       var data = {
         first_name:this.applicant.first_name,
@@ -71,7 +99,7 @@ export default {
       this.applicant = {};
     }
   }
-}
+
 
 </script>
 <style>
