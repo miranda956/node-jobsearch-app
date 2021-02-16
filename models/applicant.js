@@ -40,13 +40,12 @@ module.exports=(sequelize,DataTypes)=>{
     {
         timestamps:false,
         freezeTableName:true,
+        
         instanceMethods: {
             generateHash(password) {
-                // @ts-ignore
                 return bcrypt.hash(password, bcrypt.genSaltSync(8));
             },
             validPassword(password) {
-                // @ts-ignore
                 return bcrypt.compare(password, this.password);
             }
         }
