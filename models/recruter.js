@@ -14,10 +14,6 @@ module.exports=(sequelize,DataTypes)=>{
                 isEmail:true
             }
         },
-        establishment_date:{
-            type:DataTypes.DATE,
-            allowNull:false
-        },
         Bussiness_stream:{
             type:DataTypes.STRING,
             allowNull:false
@@ -38,7 +34,6 @@ module.exports=(sequelize,DataTypes)=>{
             }
         },
         
- 
     }, 
     {
 timestamps:false,

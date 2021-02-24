@@ -44,10 +44,9 @@ app.get('recruiter/logout',isloggedin,(req,res,next)=>{
         db.Recruiter.create({
             company_name:req.body.company_name,
             company_email:req.body.company_email,
-            establishment_date:req.body.establishment_date,
             Bussiness_stream:req.body. Bussiness_stream,
             company_url:req.body.company_url,
-            company_location: req.body.company_location,
+            company_location:req.body.company_location,
             password:req.body.password
         }).then((Recruiter)=>{
             res.status(201).json(Recruiter);

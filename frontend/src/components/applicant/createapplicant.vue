@@ -1,7 +1,7 @@
 <template>
 	
 	<div class="signup-form">
-    <form   @submit="checkForm" >
+    <form>
 		<h2>KAZI HUSTLE</h2>
 		<p class="hint-text">Create your account. It's free and only takes a minute.</p>
         <div class="form-group">
@@ -37,6 +37,7 @@ export default {
     data () {
     return {
       applicant: {
+		errors:[],
         id: null,
         first_name: '',
         last_name: '',
@@ -49,32 +50,7 @@ export default {
   },
   
    methods: {
-
-
-	   checkForm:function(e) {
-      this.errors = [];
-      if(!this.first_name) this.errors.push("firstName required.");
-	  if(!this.last_name) this.errors.push("lastName required.");
-	  if(!this.contact) this.errors.push("contact is  required.");
-	  if(!this.password ) this.errors.push("password  is required.");
-
-
-
-
-
-      if(!this.email) {
-        this.errors.push("Email required.");
-      } else if(!this.validEmail(this.email)) {
-        this.errors.push("Valid email required.");        
-      }
-      if(!this.errors.length) return true;
-      e.preventDefault();
-    },
-    validEmail:function(email) {
-      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-    }
-   },
+   
 
     saveApplicant() {
       var data = {
@@ -99,9 +75,9 @@ export default {
       this.applicant = {};
     }
   }
-
-
+}
 </script>
+
 <style>
 body {
 	color: #fff;

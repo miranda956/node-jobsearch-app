@@ -12,9 +12,6 @@
         	<input type="email" class="form-control" name=" companyEmail" placeholder="company Email" v-model="recruiter.company_email"/>
         </div>
 		<div class="form-group">
-		<input type="text" class="form-control" name="last_name" placeholder="Establishment Year " v-model="recruiter.establishment_date"/>
-		</div>
-		<div class="form-group">
             <input type="text" class="form-control" name="contact" placeholder="BussinessStream"  v-model="recruiter.Bussiness_stream"/>
         </div>
 		<div class="form-group">
