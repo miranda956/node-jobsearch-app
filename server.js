@@ -21,7 +21,9 @@ app.use(methodoverride("_method"));
 app.use(logger("dev"));
 app.use(session({
     secret:'123456',
+    // @ts-ignore
     resave:"true",
+    // @ts-ignore
     saveUninitialized:"true"
 }));
 app.use(bodyparser.urlencoded({extended:true}));
@@ -32,10 +34,15 @@ app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
  
 app.use(express.static(path.join(__dirname,'views')));
+// @ts-ignore
 require("./controllers/admin")(app); 
+// @ts-ignore
 require("./controllers/applicant")(app,{});
+// @ts-ignore
 require("./controllers/Applications")(app,{});
+// @ts-ignore
 require("./controllers/jobs")(app,{});
+// @ts-ignore
 require("./controllers/recruiter")(app,{});
 
 db.sequelize.sync({force:false}).then(()=>{

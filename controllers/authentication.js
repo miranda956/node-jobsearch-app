@@ -1,10 +1,10 @@
 import db from "../models";
 import passport from "passport";
-
+import LocalStrategy from "passport-local";
 const router=(app) =>{
 
 app.patch('/api/update/password/:id',(req,res,next)=>{
-db.Applicant.update({
+db.Users.update({
     pwd:req.body.pwd,
     where:{
         email:req.user.email
@@ -22,16 +22,15 @@ const authMiddleware = (req, res, next) => {
     }
   }
 
-passport.use(
-    // @ts-ignore
-    new LocalStrategy(
+// @ts-ignore
+passport.use(new LocalStrategy(
       {
-        usernameField: "email",
-        passwordField: "password"
+        usernameField: 'user[email]',
+        passwordField: 'password[password]'
       },
   
       (username, password, done) => {
-        let user = user.find((user) => {
+        let user = users.find((user) => {
           return user.email === username && user.password === password
         })
   
