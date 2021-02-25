@@ -4,7 +4,7 @@ import LocalStrategy from "passport-local";
 const router=(app) =>{
 
 app.patch('/api/update/password/:id',(req,res,next)=>{
-db.Users.update({
+db.User.update({
     pwd:req.body.pwd,
     where:{
         email:req.user.email
