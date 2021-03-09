@@ -6,12 +6,12 @@ module.exports=(sequelize,DataTypes)=>{
 
         },
          created_date:{
-                type:DataTypes.DATE,
+                type:DataTypes.STRING,
                 allowNull:false
 
             },
             expires_on:{
-                type:DataTypes.DATE,
+                type:DataTypes.STRING,
                 allowNull:false
                 
             },
