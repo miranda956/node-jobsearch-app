@@ -6,7 +6,6 @@ import VeeValidate from 'vee-validate'
 import store from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@/assets/css/main.css'
-import Spinner from 'vue-simple-spinner';
 import JwPagination from 'jw-vue-pagination';
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
