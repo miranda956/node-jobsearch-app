@@ -23,7 +23,6 @@ new Vue({
   el: '#app',
   store,
   router,
-  Spinner,
   render: h => h(App),
   template: '<App/>',
   components: { App }
