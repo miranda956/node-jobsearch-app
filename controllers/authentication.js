@@ -30,7 +30,7 @@ passport.use(new LocalStrategy(
       },
   
       (username, password, done) => {
-        let user = users.find((user) => {
+        let user = db.Applicant.find((user) => {
           return user.email === username && user.password === password
         })
   
@@ -43,7 +43,7 @@ passport.use(new LocalStrategy(
     )
   )
   app.get("/api/user", authMiddleware, (req, res) => {
-    let user = users.find(user => {
+    let user = db.Applicant.find(user => {
       return user.id === req.session.passport.user
     })
   
