@@ -50,7 +50,6 @@ function  router (app){
     app.post('/api/post/job',(req,res,next)=>{
         db.Jobs.create({
             job_type:req.body.job_type,
-            created_date:req.body.created_date,
             expires_on:req.body.expires_on,
             job_description:req.body.job_description,
             job_location:req.body.job_location,
