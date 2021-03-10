@@ -10,8 +10,8 @@
 
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav">
-            <a href="#" class="nav-item nav-link active">LOGIN</a>
-            <a href="#" class="nav-item nav-link">SIGNUP</a>
+            <a href="#" class="nav-item nav-link active"></a>
+            <a href="#" class="nav-item nav-link"></a>
         </div>
         <form class="form-inline ml-auto">
             <input type="text" class="form-control mr-sm-2" placeholder="Search">
